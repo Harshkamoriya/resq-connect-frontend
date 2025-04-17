@@ -60,7 +60,7 @@ export default function SignIn() {
           onClick={() => signIn("google", { callbackUrl: "/" })}
           className="w-full flex items-center gap-2 border border-gray-300 bg-white text-black hover:bg-gray-100  cursor-pointer" 
         >
-          <FcGoogle className="text-xl" /> Sign up with Google
+          <FcGoogle className="text-xl" /> Sign in with Google
         </Button>
       </div>
     </div>
