@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",  // Base directory for relative imports
+    "paths": {
+      "components/*": ["frontend/components/*"]  // Alias for components folder
+    }
+  }
+}
