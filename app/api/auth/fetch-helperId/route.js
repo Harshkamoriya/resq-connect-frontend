@@ -39,7 +39,7 @@ export async function GET(req) {
         { status: 404 }
       );
     }
-      const user = User.findOnre({email : helperEmail});
+      const user = User.findOne({email : helperEmail});
       if(!user ){
         return NextResponse.json({success:false , message:" user not found by the help of helperEmail" ,status :404});
       }
