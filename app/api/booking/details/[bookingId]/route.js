@@ -3,6 +3,7 @@ import Helper from "models/Helper";
 import User from "models/User";
 import Booking from "models/Booking";
 import { NextResponse } from "next/server";
+import Helper from "models/Helper";
 
 export async function GET(req, context) {
   await connectToDB();
