@@ -234,11 +234,18 @@ console.log(userInfo  ," userInfo ")
           alert("Payment verification failed!");
         }
       },
-      prefill: {
-        name: userInfo.name,
-        email:userInfo.email ,
-        contact: userInfo.phone ,
-      },
+    
+        prefill: {
+          name: userInfo.name + "\u200B", // cache busting
+          email: userInfo.email,
+          contact: `${userInfo.phone}${Math.floor(Math.random() * 10)}`, // add random digit
+        },
+        notes: {
+          bookingId,
+          time: new Date().toISOString(),
+        },
+      
+      
       // notes: {
       //   bookingId,
       //   time: new Date().toISOString(), // anything unique to bust internal caching
@@ -248,9 +255,11 @@ console.log(userInfo  ," userInfo ")
       },
     };
 
-    const razor = new window.Razorpay(options);
-    razor.open();
-    setIsLoading(false);
+    setTimeout(() => {
+      const razor = new window.Razorpay(options);
+      razor.open();
+      setIsLoading(false);
+    }, 300);
   };
 
 
