@@ -10,10 +10,7 @@ export async function GET(req) {
     await connectToDB();
 
     const session = await getServerSession(authOptions);
-    console.log(session)
-
     if (!session) {
-      console.log("session not found");
       return NextResponse.json(
         { success: false, message: "session not found" },
         { status: 404 }
@@ -21,34 +18,38 @@ export async function GET(req) {
     }
 
     const helperEmail = session.user.email;
-
     if (!helperEmail) {
-      console.log("helperEmail not found");
       return NextResponse.json(
         { success: false, message: "helperEmail not found" },
         { status: 404 }
       );
     }
 
-    const helper = await Helper.findOne({ email: helperEmail }); // ✅ use await
-
+    const helper = await Helper.findOne({ email: helperEmail }).lean();
     if (!helper) {
-      console.log("helper not found");
       return NextResponse.json(
         { success: false, message: "helper not found" },
         { status: 404 }
       );
     }
-      const user = User.findOne({email : helperEmail});
-      if(!user ){
-        return NextResponse.json({success:false , message:" user not found by the help of helperEmail" ,status :404});
-      }
+
+    const user = await User.findOne({ email: helperEmail }).lean();
+    if (!user) {
+      return NextResponse.json({
+        success: false,
+        message: "user not found by the help of helperEmail",
+        status: 404,
+      });
+    }
+
+    const plainSession = JSON.parse(JSON.stringify(session));
+
     return NextResponse.json({
       success: true,
       message: "Helper and session fetched successfully",
-      session,
+      session: plainSession,
       user,
-      helperId: helper._id, // or return full helper if needed
+      helperId: helper._id,
     });
   } catch (error) {
     console.log("error fetching session and helper:", error.message);
