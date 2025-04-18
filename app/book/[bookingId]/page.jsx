@@ -160,6 +160,8 @@ console.log(userInfo  ," userInfo ")
 
   // handling razorpayment gateway
 
+  
+
   const handlePayment = async () => {
     setIsLoading(true);
     console.log("in the handlepayment function");

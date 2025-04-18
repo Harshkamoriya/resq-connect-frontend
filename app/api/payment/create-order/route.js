@@ -27,7 +27,7 @@ export async function POST(req) {
     try {
         const order = await razorpay.orders.create(options);
         console.log(order , "order in the backedn")
-        return NextResponse.json({success:true , message:"order created successfully " , order , status:200});
+        return NextResponse.json(order);
     } catch (error) {
         console.error(error,"error fetching order ");
         return new NextResponse('Order creation failed', {status:500});
