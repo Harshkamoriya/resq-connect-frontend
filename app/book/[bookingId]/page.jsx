@@ -162,127 +162,140 @@ console.log(userInfo  ," userInfo ")
 
   
 
-  const handlePayment = async () => {
-    setIsLoading(true);
-    console.log("in the handlepayment function");
+  // const handlePayment = async () => {
+  //   setIsLoading(true);
+  //   console.log("in the handlepayment function");
 
-    const razorpayLoaded = await loadRazorpayScript();
-    if (!razorpayLoaded) {
-      alert("Razorpay SDK failed to load. Are you online?");
-      setIsLoading(false);
-      return;
-    }
+  //   const razorpayLoaded = await loadRazorpayScript();
+  //   if (!razorpayLoaded) {
+  //     alert("Razorpay SDK failed to load. Are you online?");
+  //     setIsLoading(false);
+  //     return;
+  //   }
 
-    // Step 1: Fetch booking details (amount, etc.)
-    const bookingRes = await fetch(`/api/booking/details/${bookingId}`);
-    console.log(bookingRes, " booking response");
-    const booking = await bookingRes.json();
-    console.log(booking, "booking data in handlepayment");
-    console.log(booking.booking.amount, "booking amount ");
+  //   // Step 1: Fetch booking details (amount, etc.)
+  //   const bookingRes = await fetch(`/api/booking/details/${bookingId}`);
+  //   console.log(bookingRes, " booking response");
+  //   const booking = await bookingRes.json();
+  //   console.log(booking, "booking data in handlepayment");
+  //   console.log(booking.booking.amount, "booking amount ");
 
-    console.log(booking, "booking data from local state");
-    const amount = booking.booking.amount;
-    // Step 2: Create Razorpay order from your API
-    const orderRes = await fetch("/api/payment/create-order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        amount: amount, // in rupees
-        receipt: `receipt_${bookingId}`,
-      }),
-    });
+  //   console.log(booking, "booking data from local state");
+  //   const amount = booking.booking.amount;
+  //   // Step 2: Create Razorpay order from your API
+  //   const orderRes = await fetch("/api/payment/create-order", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({
+  //       amount: amount, // in rupees
+  //       receipt: `receipt_${bookingId}`,
+  //     }),
+  //   });
 
-    const order = await orderRes.json();
-    console.log(order, "order ");
+  //   const order = await orderRes.json();
+  //   console.log(order, "order ");
 
-    if (!order.id) {
-      alert("Failed to create order");
-      setIsLoading(false);
-      return;
-    }
+  //   if (!order.id) {
+  //     alert("Failed to create order");
+  //     setIsLoading(false);
+  //     return;
+  //   }
 
-    // Step 3: Open Razorpay Checkout
-    const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-      amount: order.amount,
-      currency: "INR",
-      name: "ResQ Connect",
-      description: "Roadside Assistance Payment",
-      order_id: order.id,
-      handler: async function (response) {
-        // Step 4: Verify payment
-        console.log(options, "order options");
+  //   // Step 3: Open Razorpay Checkout
+  //   const options = {
+  //     key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+  //     amount: order.amount,
+  //     currency: "INR",
+  //     name: "ResQ Connect",
+  //     description: "Roadside Assistance Payment",
+  //     order_id: order.id,
+  //     handler: async function (response) {
+  //       // Step 4: Verify payment
+  //       console.log(options, "order options");
 
-        const verifyRes = await fetch("/api/payment/verify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(response),
-        });
-        console.log("verifyRes ", verifyRes);
+  //       const verifyRes = await fetch("/api/payment/verify", {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify(response),
+  //       });
+  //       console.log("verifyRes ", verifyRes);
 
-        const verifyData = await verifyRes.json();
+  //       const verifyData = await verifyRes.json();
 
-        console.log("verifyData", verifyData);
-        if (verifyData.success) {
+  //       console.log("verifyData", verifyData);
+  //       if (verifyData.success) {
          
-          localStorage.setItem("showReviewModal", "true");
-          localStorage.setItem("showJobSummaryModal", "true");
+  //         localStorage.setItem("showReviewModal", "true");
+  //         localStorage.setItem("showJobSummaryModal", "true");
 
-          localStorage.setItem("bookingIdForReview", bookingId); // persist booking ID
-          window.location.reload();
-          setShowJobSummary(false);
-        }
-        else {
-          alert("Payment verification failed!");
-        }
-      },
+  //         localStorage.setItem("bookingIdForReview", bookingId); // persist booking ID
+  //         window.location.reload();
+  //         setShowJobSummary(false);
+  //       }
+  //       else {
+  //         alert("Payment verification failed!");
+  //       }
+  //     },
     
-        prefill: {
-          name: userInfo.name + "\u200B", // cache busting
-          email: userInfo.email,
-          contact: `${userInfo.phone}${Math.floor(Math.random() * 10)}`, // add random digit
-        },
-        notes: {
-          bookingId,
-          time: new Date().toISOString(),
-        },
+  //       prefill: {
+  //         name: userInfo.name + "\u200B", // cache busting
+  //         email: userInfo.email,
+  //         contact: `${userInfo.phone}${Math.floor(Math.random() * 10)}`, // add random digit
+  //       },
+  //       notes: {
+  //         bookingId,
+  //         time: new Date().toISOString(),
+  //       },
       
       
-      // notes: {
-      //   bookingId,
-      //   time: new Date().toISOString(), // anything unique to bust internal caching
-      // },
-      theme: {
-        color: "#3b82f6",
-      },
-    };
+  //     // notes: {
+  //     //   bookingId,
+  //     //   time: new Date().toISOString(), // anything unique to bust internal caching
+  //     // },
+  //     theme: {
+  //       color: "#3b82f6",
+  //     },
+  //   };
 
-    setTimeout(() => {
-      const razor = new window.Razorpay(options);
-      razor.open();
-      setIsLoading(false);
-    }, 300);
-  };
+  //   setTimeout(() => {
+  //     const razor = new window.Razorpay(options);
+  //     razor.open();
+  //     setIsLoading(false);
+  //   }, 300);
+  // };
 
 
-  useEffect(() => {
-    const shouldShowModal = localStorage.getItem("showReviewModal") === "true";
-    const shouldShowJobSummary = localStorage.getItem("showJobSummaryModal") === "true";
-
-    const storedBookingId = localStorage.getItem("bookingIdForReview");
-  
-    if (shouldShowModal && storedBookingId && shouldShowJobSummary) {
-      setBookingId(storedBookingId); // restore booking ID
+  const handlePayment = async()=>{
+    try {
+      toast.success("payment successfull")
       setShowJobSummary(false);
       setShowModal(true);
-  
-      // Clean up so it doesn't reopen every time
-      localStorage.removeItem("showReviewModal");
-      localStorage.removeItem("showJobSummaryModal");
-
-      localStorage.removeItem("bookingIdForReview");
+      set
+      console.log("payment successfull")
+    } catch (error) {
+      console.log("payment unsuccessfull ", error.message)
     }
-  }, []);
+  }
+
+
+  // useEffect(() => {
+  //   const shouldShowModal = localStorage.getItem("showReviewModal") === "true";
+  //   const shouldShowJobSummary = localStorage.getItem("showJobSummaryModal") === "true";
+
+  //   const storedBookingId = localStorage.getItem("bookingIdForReview");
+  
+  //   if (shouldShowModal && storedBookingId && shouldShowJobSummary) {
+  //     setBookingId(storedBookingId); // restore booking ID
+  //     setShowJobSummary(false);
+  //     setShowModal(true);
+  
+  //     // Clean up so it doesn't reopen every time
+  //     localStorage.removeItem("showReviewModal");
+  //     localStorage.removeItem("showJobSummaryModal");
+
+  //     localStorage.removeItem("bookingIdForReview");
+  //   }
+  // }, []);
   
 
   // rendercomponent logic
