@@ -10,6 +10,7 @@ import HelperLocationEmitter from "components/HelperLocationEmitter";
 import JobSummaryModal from "components/Payment";
 import axios from "axios";
 import Head from "next/head";
+import { loadRazorpayScript } from "lib/loadRazorpay";
 
 import {
   Car,
@@ -109,27 +110,7 @@ console.log(userInfo  ," userInfo ")
     // Optionally: emit to backend here
   };
 
-  <Head>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  </Head>;
 
-  const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
-      if (window.Razorpay) {
-        resolve(true);
-        return;
-      }
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => {
-        resolve(true);
-      };
-      script.onerror = () => {
-        resolve(false);
-      };
-      document.body.appendChild(script);
-    });
-  };
 
   // polling to fetch the booking workstatus continuously
 
@@ -174,6 +155,8 @@ console.log(userInfo  ," userInfo ")
       setShowJobSummary(true);
     }
   }, [booking.workStatus]);
+
+  console.log(userInfo , "userinfo in handlepayment");
 
   // handling razorpayment gateway
 
