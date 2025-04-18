@@ -254,7 +254,7 @@ console.log(userInfo  ," userInfo ")
       prefill: {
         name: userInfo.name,
         email:userInfo.email ,
-        contact: '6267520920' ,
+        contact: userInfo.phone ,
       },
       // notes: {
       //   bookingId,

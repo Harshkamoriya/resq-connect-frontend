@@ -20,6 +20,7 @@ export const AppcontextProvider = (props) => {
     // const [session , setSession] = useState(null);
     const {data : session , status} =useSession();
     const hasFetched = useRef(false); // ✅ prevent duplicate fetch in dev
+    
 
     const [helperId , setHelperId] =useState(null);
 
@@ -60,7 +61,7 @@ export const AppcontextProvider = (props) => {
           const data = await res.json();
           console.log(data, "data fetched successfully");
           setHelperId(data.helperId);
-          setUserInfo(data.session.user);
+          setUserInfo(data.user);
         };
         fetchData();
       }
