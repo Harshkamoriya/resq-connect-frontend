@@ -267,11 +267,11 @@ console.log(userInfo  ," userInfo ")
 
   const handlePayment = async()=>{
     try {
+      console.log("payment successfull")
       toast.success("payment successfull")
       setShowJobSummary(false);
       setShowModal(true);
-      set
-      console.log("payment successfull")
+      
     } catch (error) {
       console.log("payment unsuccessfull ", error.message)
     }
