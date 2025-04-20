@@ -58,7 +58,7 @@ console.log(session)
     if (!query) return
     try {
       setLocationLoading(true)
-      const response = await fetch(`/api/location?query=${query}`)
+      const response = await fetch(`api/location?query=${query}`)
       const data = await response.json()
       setSuggestions(data)
       setLocationLoading(false)
