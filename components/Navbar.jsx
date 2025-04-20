@@ -1,19 +1,27 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
-import { useRouter } from "next/navigation";
-import { NavigationMenu, NavigationMenuList, NavigationMenuItem, navigationMenuTriggerStyle,NavigationMenuIndicator } from "./ui/navigation-menu";
-import { useSession , signIn,signOut } from "next-auth/react";
+import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
-  const {data :session} = useSession();
-  console.log(session)
+  const { data: session } = useSession();
   const router = useRouter();
-  const handleClick=()=>{
-    router.push('/helper/dashboard')
-  }
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleDashboardNavigation = () => {
+    router.push("/helper/dashboard");
+    setIsMenuOpen(false); // Close menu on navigation
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
+
   return (
     <nav className="w-full bg-white shadow-md px-6 py-4">
       <div className="container mx-auto flex justify-between items-center">
@@ -22,46 +30,112 @@ export default function Navbar() {
           ResQ Connect
         </Link>
 
-        {/* Navigation Links */}
-        <NavigationMenu>
-          <NavigationMenuList className="flex space-x-6">
-            <NavigationMenuItem>
-              <Link href="/services" className={cn("text-gray-700 hover:text-blue-600 transition")}>
-                Services
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link href="/about" className={cn("text-gray-700 hover:text-blue-600 transition")}>
-                About
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link href="/contact" className={cn("text-gray-700 hover:text-blue-600 transition")}>
-                Contact
-              </Link>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+        {/* Hamburger Icon for Mobile */}
+        <div className="md:hidden">
+          <button onClick={toggleMenu} aria-label="Toggle Menu">
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
 
-        {/* Buttons */}
-        <div className="flex space-x-4 items-center">
+        {/* Navigation Links */}
+        <div
+          className={cn(
+            "flex-col md:flex md:flex-row md:items-center md:space-x-6",
+            isMenuOpen ? "flex" : "hidden",
+            "absolute md:static top-16 left-0 w-full md:w-auto bg-white md:bg-transparent z-50 md:z-auto"
+          )}
+        >
+          <Link
+            href="/services"
+            className="block px-4 py-2 text-gray-700 hover:text-blue-600 transition"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Services
+          </Link>
+          <Link
+            href="/about"
+            className="block px-4 py-2 text-gray-700 hover:text-blue-600 transition"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            About
+          </Link>
+          <Link
+            href="/contact"
+            className="block px-4 py-2 text-gray-700 hover:text-blue-600 transition"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Contact
+          </Link>
+        </div>
+
+        {/* Authentication Buttons */}
+        <div className="hidden md:flex space-x-4 items-center">
           {session ? (
             <>
-              <div className="w-10 h-10 flex items-center justify-center bg-gray-300 text-gray-700 font-bold rounded-full  cursor-pointer" onClick={()=>{handleClick()}}>
+              <div
+                className="w-10 h-10 flex items-center justify-center bg-gray-300 text-gray-700 font-bold rounded-full cursor-pointer"
+                onClick={handleDashboardNavigation}
+              >
                 {session.user?.name?.charAt(0).toUpperCase()}
               </div>
-              <Button onClick={() => signOut()} className="  cursor-pointer ">Logout</Button>
+              <Button onClick={() => signOut()} className="cursor-pointer">
+                Logout
+              </Button>
             </>
           ) : (
             <>
-              <Button onClick={() => signIn()} className="cursor-pointer">Login</Button>
-              <Button className=" cursor-pointer">
-                <Link href="/auth/signup">Sign Up</Link>
+              <Button onClick={() => signIn()} className="cursor-pointer">
+                Login
               </Button>
+              <Link href="/auth/signup">
+                <Button className="cursor-pointer">Sign Up</Button>
+              </Link>
             </>
           )}
         </div>
       </div>
+
+      {/* Mobile Authentication Buttons */}
+      {isMenuOpen && (
+        <div className="md:hidden mt-4 space-y-2">
+          {session ? (
+            <>
+              <div
+                className="w-10 h-10 flex items-center justify-center bg-gray-300 text-gray-700 font-bold rounded-full cursor-pointer mx-auto"
+                onClick={handleDashboardNavigation}
+              >
+                {session.user?.name?.charAt(0).toUpperCase()}
+              </div>
+              <Button
+                onClick={() => {
+                  signOut();
+                  setIsMenuOpen(false);
+                }}
+                className="w-full"
+              >
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                onClick={() => {
+                  signIn();
+                  setIsMenuOpen(false);
+                }}
+                className="w-full"
+              >
+                Login
+              </Button>
+              <Link href="/auth/signup">
+                <Button className="w-full" onClick={() => setIsMenuOpen(false)}>
+                  Sign Up
+                </Button>
+              </Link>
+            </>
+          )}
+        </div>
+      )}
     </nav>
   );
 }
