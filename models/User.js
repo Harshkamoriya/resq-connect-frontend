@@ -33,25 +33,21 @@ const userSchema = new mongoose.Schema(
 
     profileImage: { type: String, default: "" },
 
-    servicesBooked: [
+    bookingHistory: [
       {
-        serviceType: {
-          type: String,
-          enum: ["mechanic", "fuel", "tow"],
-          required: true,
-        },
-        helper: { type: mongoose.Schema.Types.ObjectId, ref: "Helper" },
         bookingId: { type: mongoose.Schema.Types.ObjectId, ref: "Booking" },
-        status: {
-          type: String,
-          enum: ["pending", "completed", "cancelled"],
-          default: "pending",
+        helperId: { type: mongoose.Schema.Types.ObjectId, ref: "Helper" },
+        serviceType: String,
+        location: {
+          name: String,
+          latitude: Number,
+          longitude: Number,
         },
-        estimatedPrice: { type: Number, required: true },
-        finalPrice: { type: Number },
-        distance: { type: Number }, // in km
-        requestTime: { type: Date, default: Date.now },
-        completionTime: { type: Date },
+        amount: Number,
+        status: String,
+        rating: Number,
+        review: String,
+        createdAt: { type: Date, default: Date.now },
       },
     ],
 
