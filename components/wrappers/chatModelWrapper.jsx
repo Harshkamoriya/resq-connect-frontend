@@ -26,7 +26,12 @@ export default function ChatModalWrapper({ isOpen, onClose, bookingId, currentUs
   const handleSend = (text) => {
     const message = {
       text,
-      sender: currentUser, // "user" or "helper"
+      sender: {
+        id: currentUser._id,
+        name: currentUser.name,
+        role: currentUser.role,
+        avatar: currentUser.avatar, // optional
+      },
       timestamp: new Date().toISOString(),
       room: bookingId,
     };

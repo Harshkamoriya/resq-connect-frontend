@@ -1,20 +1,49 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 import { Menu, X } from "lucide-react";
+import axios from "axios";
 
 export default function Navbar() {
   const { data: session } = useSession();
   const router = useRouter();
+  const [userRole , setUserRole] = useState("");
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+
+  useEffect( ()=>{
+
+    const fetchUserRole = async()=>{
+      try {
+
+        const res = await axios.get( `api/fetch-user`)
+        const data = res.json();
+        console.log(data , "data")
+        setUserRole(data.user.role);
+
+      } catch (error) {
+        console.log("error aa raha hai bhai user role fetch karte samay")
+        console.error("error fetching the user role" , error.message);
+      }
+    }
+
+    fetchUserRole();
+    
+  },[]);
+
   const handleDashboardNavigation = () => {
-    router.push("/helper/dashboard");
+    if(userRole =="helper"){
+      router.push("/helper/dashboard");
+    }else { 
+      router.push("user-dashboard");
+    }
+    
     setIsMenuOpen(false); // Close menu on navigation
   };
 
@@ -50,7 +79,7 @@ export default function Navbar() {
             className="block px-4 py-2 text-gray-700 hover:text-blue-600 transition"
             onClick={() => setIsMenuOpen(false)}
           >
-            Services
+            Apply Helper
           </Link>
           <Link
             href="/about"

@@ -70,6 +70,9 @@ export default function BookPage() {
   const { userInfo } = useAppContext()
   const pollingRef = useRef(null)
 
+  const {user } = useAppContext();
+
+
   // Mock messages for chat
   const [messages, setMessages] = useState([
     { sender: "helper", text: "I am on the way" },
@@ -857,7 +860,7 @@ export default function BookPage() {
               </CardHeader>
               <CardContent className="p-0 overflow-hidden rounded-b-lg h-[350px]">
                 {userData?.lat && userData?.lon ? (
-                  <MapComponent userLat={userData.lat} userLon={userData.lon} helpers={helpersDetails || []} />
+                  <MapComponent userLat={userData.lat} userLon={userData.lon} helpers={helpersDetails || [] } selectedHelperId={helperId} />
                 ) : (
                   <div className="flex items-center justify-center h-full bg-slate-100">
                     <div className="text-center">
@@ -889,7 +892,7 @@ export default function BookPage() {
           isOpen={chatOpen}
           onClose={() => setChatOpen(false)}
           bookingId={booking._id}
-          currentUser="user"
+          currentUser={user}
         />
       </div>
 

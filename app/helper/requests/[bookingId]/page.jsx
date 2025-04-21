@@ -3,11 +3,18 @@
 import HelperBookingComponent from "components/HelperRequestPage";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import ChatModalWrapper from "components/wrappers/chatModelWrapper";
+import MapComponent from "components/MapComponent";
+import { useAppContext } from "app/context/Appcontext";
 
 // Get bookingId from URL params
 const Page = ({ params }) => {
   const [bookingData, setBookingData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isOpen , setIsOpen] =useState(true);
+  const [showModal , setShowModal] =useState(false);
+  const {user } =useAppContext();
+
 
   const { bookingId } = React.use(params);
 
@@ -40,9 +47,17 @@ const Page = ({ params }) => {
   }
 
   return (
-    <div className="p-4">
+    <>
+     <div className="p-4">
       <HelperBookingComponent booking={bookingData} />
+      <ChatModalWrapper Open={isOpen} onClose={()=>setShowModal(false)} bookingId={bookingId} currentUser={user} />
     </div>
+    <MapComponent/>
+    <div>
+     
+    </div>
+    </>
+   
   );
 };
 

@@ -20,7 +20,7 @@ export const AppcontextProvider = (props) => {
     // const [session , setSession] = useState(null);
     const {data : session , status} =useSession();
     const hasFetched = useRef(false); // ✅ prevent duplicate fetch in dev
-    
+    const [user ,setUser] = useState("");
 
     const [helperId , setHelperId] =useState(null);
 
@@ -53,6 +53,8 @@ export const AppcontextProvider = (props) => {
     //   fetchData();
     // }, []);
 
+  
+
     useEffect(() => {
       if (session && !hasFetched.current) {
         hasFetched.current = true;
@@ -60,12 +62,33 @@ export const AppcontextProvider = (props) => {
           const res = await fetch("/api/auth/fetch-helperId");
           const data = await res.json();
           console.log(data, "data fetched successfully");
+          
           setHelperId(data.helperId);
           setUserInfo(data.user);
         };
         fetchData();
       }
     }, [session]);
+
+    useEffect( ()=>{
+
+      const fetchUserRole = async()=>{
+        try {
+  
+          const res = await axios.get( `api/fetch-user`)
+          const data = res.json();
+          console.log(data , "data")
+          setUser(data.user);
+  
+        } catch (error) {
+          console.log("error aa raha hai bhai user  fetch karte samay")
+          console.error("error fetching the user " , error.message);
+        }
+      }
+  
+      fetchUserRole();
+      
+    },[]);
 
     // useEffect(() => {
     //   const fetchHelperIdData = async () => {
@@ -96,7 +119,8 @@ export const AppcontextProvider = (props) => {
         helpersDetails,
         setHelpersDetails,
         helperId , setHelperId,
-        userInfo , setUserInfo
+        userInfo , setUserInfo,
+        user , setUser
         // session, setSession
       }
   return (
