@@ -179,7 +179,7 @@ console.log(session)
         setHelpersData(result.helpers)
         console.log(result.helpers)
         // setHelpersDetails( result.helpers);
-        localStorage.setItem("helpersDetails",result.helpers);
+        localStorage.setItem("helpersDetails", JSON.stringify(result.helpers));
         
       }
 
