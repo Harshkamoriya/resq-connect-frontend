@@ -14,9 +14,27 @@ const Page = ({ params }) => {
   const [isOpen , setIsOpen] =useState(true);
   const [showModal , setShowModal] =useState(false);
   const {user } =useAppContext();
+  const [helpersDetails , setHelpersDetails] = useState([]);
+  const [userLat , setUserLat] = useState("");
+  const [userLon , setUserLon] = useState("");
 
 
   const { bookingId } = React.use(params);
+
+  useEffect(() => {
+      try {
+        const helpersStr = localStorage.getItem("helpersDetails")
+        if (helpersStr) {
+          const parsedHelpers = JSON.parse(helpersStr)
+          setHelpersDetails(parsedHelpers)
+        }
+        setUserLat(user.location.latitude);
+        setUserLon(user.location.longitude);
+      } catch (error) {
+        console.error("Error parsing helpers data:", error)
+      }
+    }, [])
+  
 
   useEffect(() => {
     const fetchBooking = async () => {
@@ -52,7 +70,8 @@ const Page = ({ params }) => {
       <HelperBookingComponent booking={bookingData} />
       <ChatModalWrapper Open={isOpen} onClose={()=>setShowModal(false)} bookingId={bookingId} currentUser={user} />
     </div>
-    {/* <MapComponent /> */}
+    {/* <MapComponent userLat={userLat} userLon={userLon}  helpers={helpersDetails} selectedHelperId={helperId} /> */}
+    {/* no it is wrong you have to make a seperate map component i guess i guess for an helper the helper is the user and the customer is like someone else */}
     <div>
      
     </div>
