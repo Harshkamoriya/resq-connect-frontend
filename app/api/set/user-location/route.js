@@ -26,6 +26,7 @@ export async function PUT(req) {
       success: true,
       message: "User location updated successfully",
       status: 200,
+      userLocation:user.location
     });
   } catch (error) {
     console.log("Error updating user location:", error.message);

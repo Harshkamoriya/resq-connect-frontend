@@ -52,7 +52,7 @@ const Page = ({ params }) => {
       <HelperBookingComponent booking={bookingData} />
       <ChatModalWrapper Open={isOpen} onClose={()=>setShowModal(false)} bookingId={bookingId} currentUser={user} />
     </div>
-    <MapComponent/>
+    {/* <MapComponent /> */}
     <div>
      
     </div>
